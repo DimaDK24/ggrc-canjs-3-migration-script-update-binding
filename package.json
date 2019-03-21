@@ -1,0 +1,11 @@
+{
+  "name": "canjs-3-migration-update-binding-syntax-script",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "DimaDK24",
+  "license": "ISC"
+}
