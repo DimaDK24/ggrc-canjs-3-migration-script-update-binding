@@ -1,12 +1,16 @@
 {
   "name": "canjs-3-migration-update-binding-syntax-script",
   "version": "1.0.0",
-  "description": "",
+  "description": "script to automate update binding syntax in ggrc project",
   "main": "index.js",
   "scripts": {
     "test": "jest"
   },
   "author": "DimaDK24",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DimaDK24/ggrc-canjs-3-migration-script-update-binding"
+  },
   "license": "ISC",
   "devDependencies": {
     "jest": "^24.5.0"
