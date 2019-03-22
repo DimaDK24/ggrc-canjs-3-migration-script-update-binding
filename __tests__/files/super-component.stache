@@ -1,0 +1,48 @@
+{{!
+    Copyright (C) 2019 Google Inc.
+    Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+}}
+
+<div class="filter-container">
+  <div class="filter-container__content">
+    {{#each items}}
+    {{#switch type}}
+    {{#case "state"}}
+    <div class="filter-container__state">
+      <advanced-search-filter-state {model-name}="{modelName}" {(state-model)}="{value}">
+      </advanced-search-filter-state>
+    </div>
+    {{/case}}
+    {{#case "operator"}}
+    <div class="filter-container__operator">
+      <advanced-search-filter-operator {(operator)}="{value}">
+      </advanced-search-filter-operator>
+    </div>
+    {{/case}}
+    {{#case "attribute"}}
+    <div class="filter-container__attribute">
+      <advanced-search-filter-attribute {(attribute)}="{value}" on:remove="removeItem(../)"
+        {available-attributes}="{availableAttributes}" {extendable}="{true}" on:createGroup="createGroup(../)">
+      </advanced-search-filter-attribute>
+    </div>
+    {{/case}}
+    {{#case "group"}}
+    <div class="filter-container__group">
+      <advanced-search-filter-group {(items)}="{value}" on:remove="removeItem(../)"
+        {available-attributes}="{availableAttributes}">
+      </advanced-search-filter-group>
+    </div>
+    {{/case}}
+    {{/switch}}
+    {{/each}}
+  </div>
+  {{#if showAddButton}}
+  <div class="filter-container__footer">
+    <div>
+      <button type="button" class="btn btn-small btn-white" on:el:click="addFilterCriterion()">
+        Add Attribute
+      </button>
+    </div>
+  </div>
+  {{/if}}
+</div>
