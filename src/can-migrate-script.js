@@ -62,7 +62,7 @@ function removeCurliesInRightPart(src) {
 
 function normalizeEventCallbacks(src) {
   // regex tests and explanation: https://regex101.com/r/ZcxSSx/latest
-  return src.replace(/on:((?:el:)|(?:vm:)|(?:))([A-Za-z-_0-9]+?)="([A-Za-z-_0-9.]+?)(?<!\))"/g,
+  return src.replace(/ on:((?:el:)|(?:vm:)|(?:))([A-Za-z-_0-9]+?)="([A-Za-z-_0-9.]+?)(?<!\))"/g,
     (match, bindType, eventName, callbackName) => {
       return `on:${bindType}${eventName}="${callbackName}()"`
     }
