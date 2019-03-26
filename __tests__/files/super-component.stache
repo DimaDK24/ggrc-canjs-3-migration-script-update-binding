@@ -21,7 +21,7 @@
     {{/case}}
     {{#case "attribute"}}
     <div class="filter-container__attribute">
-      <advanced-search-filter-attribute {(attribute)}="{value}" on:remove="removeItem(../)"
+      <advanced-search-filter-attribute {(attribute)}="{value}" on:remove="removeItem(../)" on:doAwesomeness="doSomething"
         {available-attributes}="{availableAttributes}" {extendable}="{true}" on:createGroup="createGroup(../)">
       </advanced-search-filter-attribute>
     </div>
@@ -29,6 +29,7 @@
     {{#case "group"}}
     <div class="filter-container__group">
       <advanced-search-filter-group {(items)}="{value}" on:remove="removeItem(../)"
+        on:doSomeCoolThing="doSomething"
         {available-attributes}="{availableAttributes}">
       </advanced-search-filter-group>
     </div>
