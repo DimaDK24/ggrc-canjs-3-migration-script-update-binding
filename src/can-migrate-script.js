@@ -53,10 +53,19 @@ var transformStacheContextIntuitive = function (src) {
   return src;
 };
 
+function removeCurliesInRightPart(src) {
+  // regex tests and explanation: https://regex101.com/r/qQZfoq/latest
+  return src.replace(/((?::to)|(?::from)|(?::bind))="\{([^{].*?[^}])\}"/g, (match, bindType, variableName) => {
+    return `${bindType}="${variableName}"`
+  })
+}
+
 var transformStache = function (src, useImplicitBindings) {
-  return useImplicitBindings ?
+  src = useImplicitBindings ?
     transformStacheContextIntuitive(src) :
     transformStacheExplicit(src);
+  src = removeCurliesInRightPart(src)
+  return src
 };
 
 var transformJs = function (src, useImplicitBindings) {
