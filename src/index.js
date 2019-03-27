@@ -8,10 +8,11 @@ function main() {
     fs.readFile(filePath, 'utf8', (err, data) => {
       if (err) throw err
       const transformedData = transformer({source: data, path: filePath}, false)
-      fs.writeFile(filePath, transformedData, (err) => {
-        if (err) throw err
-        console.log(`wrote ${filePath}`)
-      })
+      if (transformedData !== data)
+        fs.writeFile(filePath, transformedData, (err) => {
+          if (err) throw err
+          console.log(`wrote ${filePath}`)
+        })
     });
   })
 }
