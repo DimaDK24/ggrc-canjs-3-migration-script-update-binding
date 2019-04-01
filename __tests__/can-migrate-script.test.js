@@ -12,7 +12,7 @@ describe('transformer', () => {
           </advanced-search-filter-state>`
     const output = transformer({source, ...settings}, useImplicitBindings)
     expect(output).toBe(`<advanced-search-filter-state
-            vm:modelName:from="{modelName}">
+            vm:modelName:from="modelName">
           </advanced-search-filter-state>`)
   })
 })
