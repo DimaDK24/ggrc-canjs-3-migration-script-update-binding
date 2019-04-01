@@ -1,4 +1,4 @@
-const transformer = require('../src/can-migrate-script')
+const { transformer } = require('../src/can-migrate-script')
 
 const settings = {
   path: 'stuff.stache'
