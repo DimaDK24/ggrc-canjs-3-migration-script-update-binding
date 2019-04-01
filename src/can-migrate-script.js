@@ -60,21 +60,11 @@ function removeCurliesInRightPart(src) {
   })
 }
 
-function normalizeEventCallbacks(src) {
-  // regex tests and explanation: https://regex101.com/r/ZcxSSx/latest
-  return src.replace(/(?<= )on:((?:el:)|(?:vm:)|(?:))([A-Za-z-_0-9]+?)="([A-Za-z-_0-9.]+?)(?<!\))"/g,
-    (match, bindType, eventName, callbackName) => {
-      return `on:${bindType}${eventName}="${callbackName}()"`
-    }
-  )
-}
-
 var transformStache = function (src, useImplicitBindings) {
   src = useImplicitBindings ?
     transformStacheContextIntuitive(src) :
     transformStacheExplicit(src);
   src = removeCurliesInRightPart(src)
-  src = normalizeEventCallbacks(src)
   return src
 };
 
