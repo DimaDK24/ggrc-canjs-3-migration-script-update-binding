@@ -18,47 +18,13 @@ function isPropOfNativeElement(string, propPosition) {
   const probablyIsNative = !tagName.includes('-')
   // push tag if it's probably native and not included in NATIVE_ELEMENT_TAGS
   if (probablyIsNative && !PROBABLY_NATIVE_TAGS.includes(tagName)
-    && !NATIVE_ELEMENT_TAGS.includes(tagName) && !DEFINITELY_CUSTOM_TAGS.includes(tagName))
-    PROBABLY_NATIVE_TAGS.push(tagName)
+    && !NATIVE_ELEMENT_TAGS.includes(tagName) && !DEFINITELY_CUSTOM_TAGS.includes(tagName)){
+      PROBABLY_NATIVE_TAGS.push(tagName) 
+    }
   return probablyIsNative && NATIVE_ELEMENT_TAGS.includes(tagName)
 }
 
-var transformStacheExplicit = function (src) {
-  src = src.replace(/\{\^\$([^}\n]+)\}=/g, function (x, $1) {
-    return 'el:' + kebabToCamel($1) + ':to=';
-  });
-  src = src.replace(/\{\^([^}\n]+)\}=/g, function (x, $1, offset) {
-    if (isPropOfNativeElement(src, offset)) return 'el:' + kebabToCamel($1) + ':to='
-    return 'vm:' + kebabToCamel($1) + ':to=';
-  });
-
-  src = src.replace(/\{\(\$([^)\n]+)\)\}=/g, function (x, $1) {
-    return 'el:' + kebabToCamel($1) + ':bind=';
-  });
-  src = src.replace(/\{\(([^)\n]+)\)\}=/g, function (x, $1, offset) {
-    if (isPropOfNativeElement(src, offset)) return 'el:' + kebabToCamel($1) + ':bind='
-    return 'vm:' + kebabToCamel($1) + ':bind=';
-  });
-
-  src = src.replace(/\{\$([^}\n]+)\}=/g, function (x, $1) {
-    return 'el:' + kebabToCamel($1) + ':from=';
-  });
-  src = src.replace(/\{([^}\n]+)\}=/g, function (x, $1, offset) {
-    if (isPropOfNativeElement(src, offset)) return 'el:' + kebabToCamel($1) + ':from='
-    return 'vm:' + kebabToCamel($1) + ':from=';
-  });
-
-  src = src.replace(/\(\$([^)\n]+)\)=/g, function (x, $1) {
-    return 'on:el:' + kebabToCamel($1) + '=';
-  });
-  src = src.replace(/\(([^)\n]+)\)=/g, function (x, $1) {
-    return 'on:vm:' + kebabToCamel($1) + '=';
-  });
-
-  return src;
-};
-
-var transformStacheContextIntuitive = function (src) {
+var _transformStache = function (src) {
   src = src.replace(/\{\^\$?([^}\n]+)\}=/g, function (x, $1) {
     return kebabToCamel($1) + ':to=';
   });
@@ -68,8 +34,13 @@ var transformStacheContextIntuitive = function (src) {
   src = src.replace(/\{\$?([^}\n]+)\}=/g, function (x, $1) {
     return kebabToCamel($1) + ':from=';
   });
-  src = src.replace(/\(\$?([^)\n]+)\)=/g, function (x, $1) {
-    return 'on:' + kebabToCamel($1) + '=';
+
+  src = src.replace(/\(\$([^)\n]+)\)=/g, function (x, $1) {
+    return 'on:el:' + kebabToCamel($1) + '=';
+  });
+  src = src.replace(/\(([^)\n]+)\)=/g, function (x, $1) {
+    if (isPropOfNativeElement(src, offset)) return 'on:el:' + kebabToCamel($1) + '='
+    return 'on:vm:' + kebabToCamel($1) + '=';
   });
 
   return src;
@@ -82,29 +53,27 @@ function removeCurliesInRightPart(src) {
   })
 }
 
-var transformStache = function (src, useImplicitBindings) {
-  src = useImplicitBindings ?
-    transformStacheContextIntuitive(src) :
-    transformStacheExplicit(src);
+var transformStache = function (src) {
+  src = _transformStache(src);
   src = removeCurliesInRightPart(src)
   return src
 };
 
-var transformJs = function (src, useImplicitBindings) {
+var transformJs = function (src) {
   //find call to stache with a template passed in
   //note: only catches the call if a string is passed in and maynot work well if it's not one full string
   return src.replace(/(\bstache\(\s*(['"`]))((?:[^\\\2]|\\[\s\S])*?)(\2\s*\))/g, function (fullStr, $1, quoteType, $3, $4) {
-    return $1 + transformStache($3, useImplicitBindings) + $4;
+    return $1 + transformStache($3) + $4;
   });
 };
 
 module.exports = {
-  transformer: function transformer({ source, path }, useImplicitBindings) {
+  transformer: function transformer({ source, path }) {
     const extension = path.slice(path.lastIndexOf('.') + 1);
     if (extension === 'js') {
-      return transformJs(source, useImplicitBindings);
+      return transformJs(source);
     } else if (extension === 'stache') {
-      return transformStache(source, useImplicitBindings);
+      return transformStache(source);
     }
   },
   PROBABLY_NATIVE_TAGS,

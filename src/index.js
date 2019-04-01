@@ -9,7 +9,7 @@ function main() {
     fs.readFile(filePath, 'utf8', (err, data) => {
       readFilesCount++
       if (err) throw err
-      const transformedData = transformer({source: data, path: filePath}, false)
+      const transformedData = transformer({source: data, path: filePath})
       if (readFilesCount === paths.length) {
         // like Promise.all
         if (PROBABLY_NATIVE_TAGS.length) {
