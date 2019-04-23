@@ -39,7 +39,6 @@ var _transformStache = function (src) {
     return 'on:el:' + kebabToCamel($1) + '=';
   });
   src = src.replace(/\(([^)\n]+)\)=/g, function (x, $1) {
-    if (isPropOfNativeElement(src, offset)) return 'on:el:' + kebabToCamel($1) + '='
     return 'on:vm:' + kebabToCamel($1) + '=';
   });
 
